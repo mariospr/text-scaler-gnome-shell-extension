@@ -1,0 +1,8 @@
+{
+    "shell-version": ["3.16", "3.18"],
+    "uuid": "@UUID@",
+    "name": "@NAME@",
+    "description": "Simple extension to easily define arbitrary values for the text scaling factor",
+    "url": "@URL@",
+    "version": "@VERSION@"
+}
