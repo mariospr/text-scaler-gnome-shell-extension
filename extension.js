@@ -13,7 +13,9 @@ const FontResizerButton = new Lang.Class({
 
     _init: function() {
         this.parent(0.0, "Font Resizer Button");
+        this.setSensitive(true);
 
+        // Panel menu icon
         this._icon = new St.Icon({ icon_name: 'zoom-in',
                                    style_class: 'system-status-icon' });
         this.actor.add_child(this._icon);
