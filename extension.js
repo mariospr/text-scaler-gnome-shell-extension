@@ -5,6 +5,7 @@ const St = imports.gi.St;
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
+const Slider = imports.ui.slider;
 
 let _button = null;
 
@@ -32,6 +33,23 @@ const FontResizerButton = new Lang.Class({
         this._scalingValue = '1.00';
         this._entry = new St.Entry({ text: this._scalingValue });
         this._menuItem.actor.add_child(this._entry);
+
+        this._sliderValue = 0.5;
+        this._slider = new Slider.Slider(this._sliderValue);
+        this._slider.connect('value-changed', Lang.bind(this, this._onSliderValueChanged));
+        this._slider.connect('drag-end', Lang.bind(this, this._onSliderDragEnded));
+
+        this._slider.actor.x_expand = true;
+        this._menuItem.actor.add_actor(this._slider.actor);
+    },
+
+    _onSliderValueChanged: function(value) {
+        this._sliderValue = value;
+    },
+
+    _onSliderDragEnded: function() {
+        // XXX: Temporary placeholder for debugging
+        Main.notify("Value changed to: " + this._sliderValue);
     }
 });
 
