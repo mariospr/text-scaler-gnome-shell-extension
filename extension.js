@@ -9,12 +9,12 @@ const Slider = imports.ui.slider;
 
 let _button = null;
 
-const FontResizerButton = new Lang.Class({
-    Name: 'FontResizerButton',
+const TextScalerButton = new Lang.Class({
+    Name: 'TextScalerButton',
     Extends: PanelMenu.Button,
 
     _init: function() {
-        this.parent(0.0, "Font Resizer Button");
+        this.parent(0.0, "Text Scaler Button");
         this.setSensitive(true);
 
         // Panel menu icon
@@ -57,8 +57,8 @@ function init() {
 }
 
 function enable() {
-    _button = new FontResizerButton();
-    Main.panel.addToStatusArea('font-resizer-button', _button);
+    _button = new TextScalerButton();
+    Main.panel.addToStatusArea('text-scaler-button', _button);
 }
 
 function disable() {

@@ -1,9 +1,9 @@
-EXTENSION_NAME = font-resizer
-NAME = Font Resizer
+EXTENSION_NAME = text-scaler
+NAME = Text Scaler
 VERSION = 1
-URL = https://github.com/mariospr/font-resizer-shell-extension
+URL = https://github.com/mariospr/text-scaler-gnome-shell-extension
 
-UUID = $(EXTENSION_NAME)@mariospr.org
+UUID = $(EXTENSION_NAME)@gnome-shell-extensions.mariospr.org
 SED = `which sed`
 ZIP = `which zip`
 
