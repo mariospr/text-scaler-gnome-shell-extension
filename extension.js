@@ -9,6 +9,9 @@ const Slider = imports.ui.slider;
 
 let _button = null;
 
+const MIN_VALUE = 0.50;
+const MAX_VALUE = 3.00;
+
 const TextScalerButton = new Lang.Class({
     Name: 'TextScalerButton',
     Extends: PanelMenu.Button,
@@ -16,6 +19,9 @@ const TextScalerButton = new Lang.Class({
     _init: function() {
         this.parent(0.0, "Text Scaler Button");
         this.setSensitive(true);
+
+        // The actual text scaling factor, as a float
+        this._currentValue = 1.00;
 
         // Panel menu icon
         this._icon = new St.Icon({ icon_name: 'zoom-in',
@@ -30,26 +36,45 @@ const TextScalerButton = new Lang.Class({
         this._menuItem = new PopupMenu.PopupBaseMenuItem({ activate: true });
         this._menu.addMenuItem(this._menuItem);
 
-        this._scalingValue = '1.00';
-        this._entry = new St.Entry({ text: this._scalingValue });
+        this._entry = new St.Entry();
+        this._entry.clutter_text.set_editable(false);
         this._menuItem.actor.add_child(this._entry);
 
-        this._sliderValue = 0.5;
-        this._slider = new Slider.Slider(this._sliderValue);
+        this._slider = new Slider.Slider(0.0);
         this._slider.connect('value-changed', Lang.bind(this, this._onSliderValueChanged));
         this._slider.connect('drag-end', Lang.bind(this, this._onSliderDragEnded));
-
         this._slider.actor.x_expand = true;
         this._menuItem.actor.add_actor(this._slider.actor);
+
+        this._updateValue(this._currentValue);
+        this._updateEntry();
+        this._updateSlider();
     },
 
-    _onSliderValueChanged: function(value) {
-        this._sliderValue = value;
+    _onSliderValueChanged: function(slider, value) {
+        let _newScalingFactor = value * (MAX_VALUE - MIN_VALUE) + MIN_VALUE;
+        this._updateValue(_newScalingFactor);
+        this._updateEntry();
     },
 
-    _onSliderDragEnded: function() {
-        // XXX: Temporary placeholder for debugging
-        Main.notify("Value changed to: " + this._sliderValue);
+    _onSliderDragEnded: function(slider) {
+        // TODO: Actually change the scaling factor here
+    },
+
+    _updateValue: function(value) {
+        // Need to keep the value between the valid limits
+        this._currentValue = Math.max(MIN_VALUE, Math.min(value, MAX_VALUE));
+    },
+
+    _updateEntry: function() {
+        // We only show 2 decimals on the text entry widget
+        this._entry.set_text(this._currentValue.toFixed(2));
+    },
+
+    _updateSlider: function() {
+        // Need to normalize the current value to the [0.0, 1.0] range
+        let _newSliderValue = (this._currentValue - MIN_VALUE) / (MAX_VALUE - MIN_VALUE)
+        this._slider.setValue(_newSliderValue);
     }
 });
 
