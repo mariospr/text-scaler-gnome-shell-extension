@@ -13,22 +13,22 @@ const MAX_VALUE = 3.00;
 
 const NUM_DECIMALS = 2;
 
-// Makes sure that the value is in [MIN_VALUE, MAX_VALUE]
+// Makes sure that the value is in [MIN_VALUE, MAX_VALUE].
 function _normalizeValue(value) {
     return Math.max(MIN_VALUE, Math.min(value, MAX_VALUE));
 }
 
-// Translates a value in [MIN_VALUE, MAX_VALUE] to [0.00, 1.00]
+// Translates a value in [MIN_VALUE, MAX_VALUE] to [0.00, 1.00].
 function _textScalingToSliderValue(textScaling) {
     return (textScaling - MIN_VALUE) / (MAX_VALUE - MIN_VALUE);
 }
 
-// Translates a value in [0.00, 1.00] to [MIN_VALUE, MAX_VALUE]
+// Translates a value in [0.00, 1.00] to [MIN_VALUE, MAX_VALUE].
 function _sliderValueToTextScaling(sliderValue) {
     return sliderValue * (MAX_VALUE - MIN_VALUE) + MIN_VALUE;
 }
 
-// Checks if a given float number matches the default one using NUM_DECIMALS
+// Checks if a given float number matches the default one using NUM_DECIMALS.
 function isDefaultFloatValue(value) {
     return Math.abs(value - DEFAULT_VALUE) < (Math.pow(10, -NUM_DECIMALS) / 2);
 }
@@ -41,22 +41,22 @@ const TextScalerButton = new Lang.Class({
         this.parent(0.0, "Text Scaler Button");
         this.setSensitive(true);
 
-        // The actual text scaling factor, as a float
+        // The actual text scaling factor, as a float.
         this._currentValue = DEFAULT_VALUE;
 
-        // The value currently displayed by the slider, normalized to [0.00, 1.00]
+        // The value currently displayed by the slider, normalized to [0.00, 1.00].
         this._sliderValue = _textScalingToSliderValue(this._currentValue);
 
-        // Panel menu icon
+        // Panel menu icon.
         this._icon = new St.Icon({ icon_name: 'zoom-in',
                                    style_class: 'system-status-icon' });
         this.actor.add_child(this._icon);
 
-        // Popup Menu
+        // Popup Menu.
         this._menu = new PopupMenu.PopupMenu(this.actor, 0.0, St.Side.BOTTOM);
         this.setMenu(this._menu);
 
-        // Create the text entry and the slider
+        // Create the text entry and the slider.
         this._menuItem = new PopupMenu.PopupBaseMenuItem({ activate: true });
         this._menu.addMenuItem(this._menuItem);
 
@@ -124,7 +124,7 @@ const TextScalerButton = new Lang.Class({
         if (this._currentValue == value)
             return;
 
-        // Need to keep the value between the valid limits
+        // Need to keep the value between the valid limits.
         this._currentValue = _normalizeValue(value);
 
         this._updateUI(source);
@@ -145,7 +145,7 @@ const TextScalerButton = new Lang.Class({
     _updateEntry: function(value=null) {
         let valueToDisplay = (value != null) ? value : this._currentValue;
 
-        // We only show NUM_DECIMALS decimals on the text entry widget
+        // We only show NUM_DECIMALS decimals on the text entry widget.
         this._entry.set_text(valueToDisplay.toFixed(NUM_DECIMALS));
     },
 
