@@ -122,7 +122,7 @@ const TextScalerButton = new Lang.Class({
 
         // Only update the value if it's a valid one, otherwise
         // simply reset the UI to show the current status again.
-        if (!isNaN(currentText) || isFinite(currentText)) {
+        if (isFinite(currentText) && !isNaN(currentText) && !isNaN(value)) {
             this._updateValue(value);
         }
 
