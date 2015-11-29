@@ -15,6 +15,11 @@ const MAX_VALUE = 3.00;
 
 const NUM_DECIMALS = 2;
 
+// Translates a value in [MIN_VALUE, MAX_VALUE] to [0.00, 1.00]
+function _textScalingToSliderValue(textScaling) {
+    return (textScaling - MIN_VALUE) / (MAX_VALUE - MIN_VALUE);
+}
+
 // Checks if a given float number matches the default one using NUM_DECIMALS
 function isDefaultFloatValue(value) {
     return Math.abs(value - DEFAULT_VALUE) < (Math.pow(10, -NUM_DECIMALS) / 2);
@@ -105,9 +110,7 @@ const TextScalerButton = new Lang.Class({
     },
 
     _updateSlider: function() {
-        // Need to normalize the current value to the [0.0, 1.0] range
-        let newSliderValue = (this._currentValue - MIN_VALUE) / (MAX_VALUE - MIN_VALUE);
-        this._slider.setValue(newSliderValue);
+        this._slider.setValue(_textScalingToSliderValue(this._currentValue));
     },
 
     _updateResetValueItem: function() {
