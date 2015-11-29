@@ -54,7 +54,7 @@ const TextScalerButton = new Lang.Class({
         this._sliderValue = _textScalingToSliderValue(this._currentValue);
 
         // Panel menu icon.
-        this._icon = new St.Icon({ icon_name: 'zoom-in',
+        this._icon = new St.Icon({ icon_name: 'preferences-desktop-font',
                                    style_class: 'system-status-icon' });
         this.actor.add_child(this._icon);
 
