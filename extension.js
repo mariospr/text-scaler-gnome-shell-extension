@@ -52,8 +52,8 @@ const TextScalerButton = new Lang.Class({
     },
 
     _onSliderValueChanged: function(slider, value) {
-        let _newScalingFactor = value * (MAX_VALUE - MIN_VALUE) + MIN_VALUE;
-        this._updateValue(_newScalingFactor);
+        let newScalingFactor = value * (MAX_VALUE - MIN_VALUE) + MIN_VALUE;
+        this._updateValue(newScalingFactor);
         this._updateEntry();
     },
 
@@ -73,8 +73,8 @@ const TextScalerButton = new Lang.Class({
 
     _updateSlider: function() {
         // Need to normalize the current value to the [0.0, 1.0] range
-        let _newSliderValue = (this._currentValue - MIN_VALUE) / (MAX_VALUE - MIN_VALUE)
-        this._slider.setValue(_newSliderValue);
+        let newSliderValue = (this._currentValue - MIN_VALUE) / (MAX_VALUE - MIN_VALUE);
+        this._slider.setValue(newSliderValue);
     }
 });
 
