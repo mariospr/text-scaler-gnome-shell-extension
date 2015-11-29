@@ -92,6 +92,14 @@ const TextScalerButton = new Lang.Class({
         return this._slider.onKeyPressEvent(actor, event);
     },
 
+    _onEntryActivated: function(entry) {
+        this._updateValueFromTextEntry(entry);
+    },
+
+    _onEntryKeyFocusOut: function(entry) {
+        this._updateValueFromTextEntry(entry);
+    },
+
     _onSliderValueChanged: function(slider, value) {
         this._sliderValue = value;
 
@@ -104,12 +112,8 @@ const TextScalerButton = new Lang.Class({
         this._updateValue(_sliderValueToTextScaling(this._sliderValue), slider);
     },
 
-    _onEntryActivated: function(entry) {
-        this._updateValueFromTextEntry(entry);
-    },
-
-    _onEntryKeyFocusOut: function(entry) {
-        this._updateValueFromTextEntry(entry);
+    _onResetValueActivate: function(menuItem, event) {
+        this._updateValue(DEFAULT_VALUE);
     },
 
     _updateValueFromTextEntry: function(entry) {
@@ -129,10 +133,6 @@ const TextScalerButton = new Lang.Class({
 
     _updateSettings: function() {
         this._settings.set_double(TEXT_SCALING_FACTOR_KEY, this._currentValue);
-    },
-
-    _onResetValueActivate: function(menuItem, event) {
-        this._updateValue(DEFAULT_VALUE);
     },
 
     _updateValue: function(value, source=null) {
