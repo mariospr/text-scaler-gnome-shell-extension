@@ -63,6 +63,7 @@ const TextScalerButton = new Lang.Class({
         this.setMenu(this._menu);
 
         this._menuItem = new PopupMenu.PopupBaseMenuItem({ activate: true });
+        this._menuItem.actor.connect('key-press-event', Lang.bind(this, this._onMenuItemKeyPressed));
         this._menu.addMenuItem(this._menuItem);
 
         this._entry = new St.Entry();
@@ -85,6 +86,10 @@ const TextScalerButton = new Lang.Class({
 
         // Make sure we first update the UI with the current state.
         this._updateUI();
+    },
+
+    _onMenuItemKeyPressed: function(actor, event) {
+        return this._slider.onKeyPressEvent(actor, event);
     },
 
     _onSliderValueChanged: function(slider, value) {
