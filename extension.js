@@ -32,7 +32,7 @@ function _sliderValueToTextScaling(sliderValue) {
 }
 
 // Checks if a given float number matches the default one using NUM_DECIMALS.
-function isDefaultFloatValue(value) {
+function _isDefaultFloatValue(value) {
     return Math.abs(value - DEFAULT_VALUE) < (Math.pow(10, -NUM_DECIMALS) / 2);
 }
 
@@ -164,7 +164,7 @@ const TextScalerButton = new Lang.Class({
     },
 
     _updateResetValueItem: function() {
-        this._resetValueItem.setSensitive(!isDefaultFloatValue(this._currentValue));
+        this._resetValueItem.setSensitive(!_isDefaultFloatValue(this._currentValue));
     }
 });
 
