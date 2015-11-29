@@ -64,6 +64,7 @@ const TextScalerButton = new Lang.Class({
 
         this._entry = new St.Entry();
         this._entry.clutter_text.connect('activate', Lang.bind(this, this._onEntryActivated));
+        this._entry.clutter_text.connect('key-focus-out', Lang.bind(this, this._onEntryKeyFocusOut));
         this._menuItem.actor.add_child(this._entry);
 
         this._slider = new Slider.Slider(this._sliderValue);
@@ -95,16 +96,26 @@ const TextScalerButton = new Lang.Class({
     },
 
     _onEntryActivated: function(entry) {
-        let currentText = this._entry.get_text();
+        this._updateValueFromTextEntry(entry);
+    },
+
+    _onEntryKeyFocusOut: function(entry) {
+        this._updateValueFromTextEntry(entry);
+    },
+
+    _updateValueFromTextEntry: function(entry) {
+        let currentText = entry.get_text();
         let value = parseFloat(currentText);
 
         // Only update the value if it's a valid one, otherwise
         // simply reset the UI to show the current status again.
         if (currentText == value.toString()) {
             this._updateValue(value);
-        } else {
-            this._updateUI();
         }
+
+        // Force to always update the UI to make sure that whatever
+        // value gets actually applied is displayed as it should be.
+        this._updateUI();
     },
 
     _onResetValueActivate: function(menuItem, event) {
