@@ -63,7 +63,7 @@ const TextScalerButton = new Lang.Class({
         this._menu.addMenuItem(this._menuItem);
 
         this._entry = new St.Entry();
-        this._entry.clutter_text.set_editable(false);
+        this._entry.clutter_text.connect('activate', Lang.bind(this, this._onEntryActivated));
         this._menuItem.actor.add_child(this._entry);
 
         this._slider = new Slider.Slider(this._sliderValue);
@@ -92,6 +92,19 @@ const TextScalerButton = new Lang.Class({
 
     _onSliderDragEnded: function(slider) {
         this._updateValue(_sliderValueToTextScaling(this._sliderValue), slider);
+    },
+
+    _onEntryActivated: function(entry) {
+        let currentText = this._entry.get_text();
+        let value = parseFloat(currentText);
+
+        // Only update the value if it's a valid one, otherwise
+        // simply reset the UI to show the current status again.
+        if (currentText == value.toString()) {
+            this._updateValue(value);
+        } else {
+            this._updateUI();
+        }
     },
 
     _onResetValueActivate: function(menuItem, event) {
