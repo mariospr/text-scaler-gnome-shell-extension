@@ -7,7 +7,7 @@ UUID = $(EXTENSION_NAME)@gnome-shell-extensions.mariospr.org
 SED = `which sed`
 ZIP = `which zip`
 
-install_data = metadata.json extension.js stylesheet.css
+install_data = metadata.json extension.js
 
 metadata.json: metadata.json.in Makefile
 	@$(SED) \
