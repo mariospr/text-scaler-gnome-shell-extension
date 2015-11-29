@@ -41,6 +41,9 @@ const TextScalerButton = new Lang.Class({
         // The actual text scaling factor, as a float
         this._currentValue = DEFAULT_VALUE;
 
+        // The value currently displayed by the slider, normalized to [0.00, 1.00]
+        this._sliderValue = _textScalingToSliderValue(this._currentValue);
+
         // Panel menu icon
         this._icon = new St.Icon({ icon_name: 'zoom-in',
                                    style_class: 'system-status-icon' });
@@ -58,7 +61,7 @@ const TextScalerButton = new Lang.Class({
         this._entry.clutter_text.set_editable(false);
         this._menuItem.actor.add_child(this._entry);
 
-        this._slider = new Slider.Slider(0.0);
+        this._slider = new Slider.Slider(this._sliderValue);
         this._slider.connect('value-changed', Lang.bind(this, this._onSliderValueChanged));
         this._slider.connect('drag-end', Lang.bind(this, this._onSliderDragEnded));
         this._slider.actor.x_expand = true;
@@ -75,11 +78,15 @@ const TextScalerButton = new Lang.Class({
     },
 
     _onSliderValueChanged: function(slider, value) {
-        this._updateValue(_sliderValueToTextScaling(value), slider);
+        this._sliderValue = value;
+
+        // The following call only updates the text in the entry but does
+        // not change the actual current value, which we'll do on drag ended.
+        this._updateEntry(_sliderValueToTextScaling(value));
     },
 
     _onSliderDragEnded: function(slider) {
-        // TODO: Actually change the scaling factor here
+        this._updateValue(_sliderValueToTextScaling(this._sliderValue), slider);
     },
 
     _onResetValueActivate: function(menuItem, event) {
@@ -108,9 +115,11 @@ const TextScalerButton = new Lang.Class({
         this._updateResetValueItem();
     },
 
-    _updateEntry: function() {
+    _updateEntry: function(value=null) {
+        let valueToDisplay = (value != null) ? value : this._currentValue;
+
         // We only show NUM_DECIMALS decimals on the text entry widget
-        this._entry.set_text(this._currentValue.toFixed(NUM_DECIMALS));
+        this._entry.set_text(valueToDisplay.toFixed(NUM_DECIMALS));
     },
 
     _updateSlider: function() {
