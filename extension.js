@@ -46,24 +46,36 @@ const TextScalerButton = new Lang.Class({
         this._slider.actor.x_expand = true;
         this._menuItem.actor.add_actor(this._slider.actor);
 
-        this._updateValue(this._currentValue);
-        this._updateEntry();
-        this._updateSlider();
+        this._updateUI();
     },
 
     _onSliderValueChanged: function(slider, value) {
         let newScalingFactor = value * (MAX_VALUE - MIN_VALUE) + MIN_VALUE;
-        this._updateValue(newScalingFactor);
-        this._updateEntry();
+        this._updateValue(newScalingFactor, slider);
     },
 
     _onSliderDragEnded: function(slider) {
         // TODO: Actually change the scaling factor here
     },
 
-    _updateValue: function(value) {
+    _updateValue: function(value, source=null) {
+        if (this._currentValue == value)
+            return;
+
         // Need to keep the value between the valid limits
         this._currentValue = Math.max(MIN_VALUE, Math.min(value, MAX_VALUE));
+
+        this._updateUI(source);
+    },
+
+    _updateUI: function(source=null) {
+        if (source != this._entry) {
+            this._updateEntry();
+        }
+
+        if (source != this._slider) {
+            this._updateSlider();
+        }
     },
 
     _updateEntry: function() {
