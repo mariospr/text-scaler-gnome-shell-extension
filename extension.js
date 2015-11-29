@@ -1,6 +1,7 @@
 // -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
 const Lang = imports.lang;
+const Gio = imports.gi.Gio;
 const St = imports.gi.St;
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
@@ -12,6 +13,8 @@ const MIN_VALUE = 0.50;
 const MAX_VALUE = 3.00;
 
 const NUM_DECIMALS = 2;
+
+const TEXT_SCALING_FACTOR_KEY = 'text-scaling-factor';
 
 // Makes sure that the value is in [MIN_VALUE, MAX_VALUE].
 function _normalizeValue(value) {
@@ -41,8 +44,11 @@ const TextScalerButton = new Lang.Class({
         this.parent(0.0, "Text Scaler Button");
         this.setSensitive(true);
 
+        // GSettings to change the text-scaling factor.
+        this._settings = new Gio.Settings({ schema_id: 'org.gnome.desktop.interface' });
+
         // The actual text scaling factor, as a float.
-        this._currentValue = DEFAULT_VALUE;
+        this._currentValue = this._settings.get_double(TEXT_SCALING_FACTOR_KEY);
 
         // The value currently displayed by the slider, normalized to [0.00, 1.00].
         this._sliderValue = _textScalingToSliderValue(this._currentValue);
@@ -116,6 +122,10 @@ const TextScalerButton = new Lang.Class({
         this._updateUI();
     },
 
+    _updateSettings: function() {
+        this._settings.set_double(TEXT_SCALING_FACTOR_KEY, this._currentValue);
+    },
+
     _onResetValueActivate: function(menuItem, event) {
         this._updateValue(DEFAULT_VALUE);
     },
@@ -128,6 +138,7 @@ const TextScalerButton = new Lang.Class({
         this._currentValue = _normalizeValue(value);
 
         this._updateUI(source);
+        this._updateSettings();
     },
 
     _updateUI: function(source=null) {
