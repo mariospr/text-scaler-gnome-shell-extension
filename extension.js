@@ -15,6 +15,11 @@ const MAX_VALUE = 3.00;
 
 const NUM_DECIMALS = 2;
 
+// Makes sure that the value is in [MIN_VALUE, MAX_VALUE]
+function _normalizeValue(value) {
+    return Math.max(MIN_VALUE, Math.min(value, MAX_VALUE));
+}
+
 // Translates a value in [MIN_VALUE, MAX_VALUE] to [0.00, 1.00]
 function _textScalingToSliderValue(textScaling) {
     return (textScaling - MIN_VALUE) / (MAX_VALUE - MIN_VALUE);
@@ -98,7 +103,7 @@ const TextScalerButton = new Lang.Class({
             return;
 
         // Need to keep the value between the valid limits
-        this._currentValue = Math.max(MIN_VALUE, Math.min(value, MAX_VALUE));
+        this._currentValue = _normalizeValue(value);
 
         this._updateUI(source);
     },
