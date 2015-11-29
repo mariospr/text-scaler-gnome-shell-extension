@@ -47,6 +47,13 @@ const TextScalerButton = new Lang.Class({
         this._slider.actor.x_expand = true;
         this._menuItem.actor.add_actor(this._slider.actor);
 
+        this._separatorItem = new PopupMenu.PopupSeparatorMenuItem();
+        this._menu.addMenuItem(this._separatorItem);
+
+        this._resetValueItem = new PopupMenu.PopupMenuItem("Reset to default value");
+        this._resetValueItem.connect('activate', Lang.bind(this, this._onResetValueActivate));
+        this._menu.addMenuItem(this._resetValueItem);
+
         this._updateUI();
     },
 
@@ -57,6 +64,10 @@ const TextScalerButton = new Lang.Class({
 
     _onSliderDragEnded: function(slider) {
         // TODO: Actually change the scaling factor here
+    },
+
+    _onResetValueActivate: function(menuItem, event) {
+        this._updateValue(DEFAULT_VALUE);
     },
 
     _updateValue: function(value, source=null) {
@@ -77,6 +88,8 @@ const TextScalerButton = new Lang.Class({
         if (source != this._slider) {
             this._updateSlider();
         }
+
+        this._updateResetValueItem();
     },
 
     _updateEntry: function() {
@@ -88,6 +101,11 @@ const TextScalerButton = new Lang.Class({
         // Need to normalize the current value to the [0.0, 1.0] range
         let newSliderValue = (this._currentValue - MIN_VALUE) / (MAX_VALUE - MIN_VALUE);
         this._slider.setValue(newSliderValue);
+    },
+
+    _updateResetValueItem: function() {
+        let isDefaultValue = Math.abs(this._currentValue - DEFAULT_VALUE) < 0.005;
+        this._resetValueItem.setSensitive(!isDefaultValue);
     }
 });
 
