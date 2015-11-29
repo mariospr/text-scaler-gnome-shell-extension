@@ -7,8 +7,6 @@ const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 const Slider = imports.ui.slider;
 
-let _button = null;
-
 const DEFAULT_VALUE = 1.00;
 const MIN_VALUE = 0.50;
 const MAX_VALUE = 3.00;
@@ -159,6 +157,8 @@ const TextScalerButton = new Lang.Class({
         this._resetValueItem.setSensitive(!isDefaultFloatValue(this._currentValue));
     }
 });
+
+let _button = null;
 
 function init() {
 }
