@@ -20,6 +20,11 @@ function _textScalingToSliderValue(textScaling) {
     return (textScaling - MIN_VALUE) / (MAX_VALUE - MIN_VALUE);
 }
 
+// Translates a value in [0.00, 1.00] to [MIN_VALUE, MAX_VALUE]
+function _sliderValueToTextScaling(sliderValue) {
+    return sliderValue * (MAX_VALUE - MIN_VALUE) + MIN_VALUE;
+}
+
 // Checks if a given float number matches the default one using NUM_DECIMALS
 function isDefaultFloatValue(value) {
     return Math.abs(value - DEFAULT_VALUE) < (Math.pow(10, -NUM_DECIMALS) / 2);
@@ -70,8 +75,7 @@ const TextScalerButton = new Lang.Class({
     },
 
     _onSliderValueChanged: function(slider, value) {
-        let newScalingFactor = value * (MAX_VALUE - MIN_VALUE) + MIN_VALUE;
-        this._updateValue(newScalingFactor, slider);
+        this._updateValue(_sliderValueToTextScaling(value), slider);
     },
 
     _onSliderDragEnded: function(slider) {
