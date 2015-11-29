@@ -13,6 +13,13 @@ const DEFAULT_VALUE = 1.00;
 const MIN_VALUE = 0.50;
 const MAX_VALUE = 3.00;
 
+const NUM_DECIMALS = 2;
+
+// Checks if a given float number matches the default one using NUM_DECIMALS
+function isDefaultFloatValue(value) {
+    return Math.abs(value - DEFAULT_VALUE) < (Math.pow(10, -NUM_DECIMALS) / 2);
+}
+
 const TextScalerButton = new Lang.Class({
     Name: 'TextScalerButton',
     Extends: PanelMenu.Button,
@@ -93,8 +100,8 @@ const TextScalerButton = new Lang.Class({
     },
 
     _updateEntry: function() {
-        // We only show 2 decimals on the text entry widget
-        this._entry.set_text(this._currentValue.toFixed(2));
+        // We only show NUM_DECIMALS decimals on the text entry widget
+        this._entry.set_text(this._currentValue.toFixed(NUM_DECIMALS));
     },
 
     _updateSlider: function() {
@@ -104,8 +111,7 @@ const TextScalerButton = new Lang.Class({
     },
 
     _updateResetValueItem: function() {
-        let isDefaultValue = Math.abs(this._currentValue - DEFAULT_VALUE) < 0.005;
-        this._resetValueItem.setSensitive(!isDefaultValue);
+        this._resetValueItem.setSensitive(!isDefaultFloatValue(this._currentValue));
     }
 });
 
