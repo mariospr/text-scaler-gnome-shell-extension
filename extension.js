@@ -56,7 +56,6 @@ const TextScalerButton = new Lang.Class({
         this._menu = new PopupMenu.PopupMenu(this.actor, 0.0, St.Side.BOTTOM);
         this.setMenu(this._menu);
 
-        // Create the text entry and the slider.
         this._menuItem = new PopupMenu.PopupBaseMenuItem({ activate: true });
         this._menu.addMenuItem(this._menuItem);
 
@@ -78,6 +77,7 @@ const TextScalerButton = new Lang.Class({
         this._resetValueItem.connect('activate', Lang.bind(this, this._onResetValueActivate));
         this._menu.addMenuItem(this._resetValueItem);
 
+        // Make sure we first update the UI with the current state.
         this._updateUI();
     },
 
