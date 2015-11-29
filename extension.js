@@ -109,7 +109,7 @@ const TextScalerButton = new Lang.Class({
     },
 
     _onSliderDragEnded: function(slider) {
-        this._updateValue(_sliderValueToTextScaling(this._sliderValue), slider);
+        this._updateValue(_sliderValueToTextScaling(this._sliderValue));
     },
 
     _onResetValueActivate: function(menuItem, event) {
@@ -135,26 +135,20 @@ const TextScalerButton = new Lang.Class({
         this._settings.set_double(TEXT_SCALING_FACTOR_KEY, this._currentValue);
     },
 
-    _updateValue: function(value, source=null) {
+    _updateValue: function(value) {
         if (this._currentValue == value)
             return;
 
         // Need to keep the value between the valid limits.
         this._currentValue = _normalizeValue(value);
 
-        this._updateUI(source);
+        this._updateUI();
         this._updateSettings();
     },
 
-    _updateUI: function(source=null) {
-        if (source != this._entry) {
-            this._updateEntry();
-        }
-
-        if (source != this._slider) {
-            this._updateSlider();
-        }
-
+    _updateUI: function() {
+        this._updateEntry();
+        this._updateSlider();
         this._updateResetValueItem();
     },
 
