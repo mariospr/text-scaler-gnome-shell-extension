@@ -46,6 +46,7 @@ const TextScalerButton = new Lang.Class({
 
         // GSettings to change the text-scaling factor.
         this._settings = new Gio.Settings({ schema_id: 'org.gnome.desktop.interface' });
+        this._settings.connect('changed::text-scaling-factor', Lang.bind(this, this._onSettingsChanged));
 
         // The actual text scaling factor, as a float.
         this._currentValue = this._settings.get_double(TEXT_SCALING_FACTOR_KEY);
@@ -88,6 +89,10 @@ const TextScalerButton = new Lang.Class({
 
         // Make sure we first update the UI with the current state.
         this._updateUI();
+    },
+
+    _onSettingsChanged: function(settings, key) {
+        this._updateValue(this._settings.get_double(TEXT_SCALING_FACTOR_KEY), false);
     },
 
     _onMenuItemKeyPressed: function(actor, event) {
@@ -137,15 +142,20 @@ const TextScalerButton = new Lang.Class({
         this._settings.set_double(TEXT_SCALING_FACTOR_KEY, this._currentValue);
     },
 
-    _updateValue: function(value) {
+    _updateValue: function(value, updateSettings=false) {
         if (this._currentValue == value)
             return;
 
         // Need to keep the value between the valid limits.
         this._currentValue = _normalizeValue(value);
 
+        // We don't always want to update the GSettings (e.g. external change).
+        if (!updateSettings) {
+            this._updateSettings();
+        }
+
+        // Always affect the UI to reflect changes.
         this._updateUI();
-        this._updateSettings();
     },
 
     _updateUI: function() {
