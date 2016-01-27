@@ -76,9 +76,12 @@ const TextScalerButton = new Lang.Class({
 
         this._slider = new Slider.Slider(this._sliderValue);
         this._slider.connect('value-changed', Lang.bind(this, this._onSliderValueChanged));
+        this._slider.connect('drag-begin', Lang.bind(this, this._onSliderDragBegan));
         this._slider.connect('drag-end', Lang.bind(this, this._onSliderDragEnded));
         this._slider.actor.x_expand = true;
         this._menuItem.actor.add_actor(this._slider.actor);
+
+        this._sliderIsDragging = false;
 
         this._separatorItem = new PopupMenu.PopupSeparatorMenuItem();
         this._menu.addMenuItem(this._separatorItem);
@@ -109,14 +112,26 @@ const TextScalerButton = new Lang.Class({
 
     _onSliderValueChanged: function(slider, value) {
         this._sliderValue = value;
-
-        // The following call only updates the text in the entry but does
-        // not change the actual current value, which we'll do on drag ended.
         this._updateEntry(_sliderValueToTextScaling(value));
+
+        // We don't want to update the value when the user is explicitly
+        // dragging the slider by clicking on the handle and moving it
+        // around to avoid the unpredictable (and very confusing) behaviour
+        // that would happen due to the mouse pointer being on a different
+        // area of the screen right after updating the scaling factor.
+        if (!this._sliderIsDragging)
+            this._updateValue(_sliderValueToTextScaling(this._sliderValue));
+    },
+
+    _onSliderDragBegan: function(slider) {
+        this._sliderIsDragging = true;
     },
 
     _onSliderDragEnded: function(slider) {
+        // We don't update the scaling factor on 'value-changed'
+        // when explicitly dragging, so we need to do it here too.
         this._updateValue(_sliderValueToTextScaling(this._sliderValue));
+        this._sliderIsDragging = false;
     },
 
     _onResetValueActivate: function(menuItem, event) {
