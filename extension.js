@@ -8,6 +8,11 @@ const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 const Slider = imports.ui.slider;
 
+const Me = imports.misc.extensionUtils.getCurrentExtension();
+const Convenience = Me.imports.convenience;
+const Gettext = imports.gettext.domain('text-scaler');
+const _ = Gettext.gettext;
+
 const DEFAULT_VALUE = 1.00;
 const MIN_VALUE = 0.50;
 const MAX_VALUE = 3.00;
@@ -86,7 +91,7 @@ const TextScalerButton = new Lang.Class({
         this._separatorItem = new PopupMenu.PopupSeparatorMenuItem();
         this._menu.addMenuItem(this._separatorItem);
 
-        this._resetValueItem = new PopupMenu.PopupMenuItem("Reset to default value");
+        this._resetValueItem = new PopupMenu.PopupMenuItem(_("Reset to default value"));
         this._resetValueItem.connect('activate', Lang.bind(this, this._onResetValueActivate));
         this._menu.addMenuItem(this._resetValueItem);
 
@@ -198,6 +203,7 @@ const TextScalerButton = new Lang.Class({
 let _button = null;
 
 function init() {
+    Convenience.initTranslations("text-scaler");
 }
 
 function enable() {
