@@ -26,12 +26,18 @@ Clone the repository:
     $ git clone git://github.com/mariospr/text-scaler-gnome-shell-extension text-scaler
     $ cd text-scaler
 
-And type:
+And type the following to install it under /usr (or any other prefix):
 
+    $ autogen --prefix=/usr
     $ make install
 
-The extension will be copied in your `$HOME` directory, and can be enabled using
-the `gnome-shell-extension-prefs` command or the GNOME Tweak Tool application.
+If all you want is install it under your `$HOME` directory, you can simply do this:
+
+    $ autogen
+    $ make local-install
+
+Once installed, the extension can be enabled using the `gnome-shell-extension-prefs`
+command or the GNOME Tweak Tool application.
 
 ### Contributing
 
