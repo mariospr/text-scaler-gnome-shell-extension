@@ -61,30 +61,30 @@ const TextScalerButton = new Lang.Class({
 
         // Panel menu icon.
         this._hbox = new St.BoxLayout({ style_class: 'panel-status-menu-box' });
-        this._hbox.add_child(new St.Icon({ style_class: 'system-status-icon',
+        this._hbox.add_actor(new St.Icon({ style_class: 'system-status-icon',
                                            icon_name: 'preferences-desktop-font' }));
-        this._hbox.add_child(PopupMenu.arrowIcon(St.Side.BOTTOM));
-        this.actor.add_child(this._hbox);
+        this._hbox.add_actor(PopupMenu.arrowIcon(St.Side.BOTTOM));
+        this.add_actor(this._hbox);
 
         // Popup Menu.
-        this._menu = new PopupMenu.PopupMenu(this.actor, 0.0, St.Side.BOTTOM);
+        this._menu = new PopupMenu.PopupMenu(this, 0.0, St.Side.BOTTOM);
         this.setMenu(this._menu);
 
         this._menuItem = new PopupMenu.PopupBaseMenuItem({ activate: true });
-        this._menuItem.actor.connect('key-press-event', Lang.bind(this, this._onMenuItemKeyPressed));
+        this._menuItem.connect('key-press-event', Lang.bind(this, this._onMenuItemKeyPressed));
         this._menu.addMenuItem(this._menuItem);
 
         this._entry = new St.Entry();
         this._entry.clutter_text.connect('activate', Lang.bind(this, this._onEntryActivated));
         this._entry.clutter_text.connect('key-focus-out', Lang.bind(this, this._onEntryKeyFocusOut));
-        this._menuItem.actor.add_child(this._entry);
+        this._menuItem.add_actor(this._entry);
 
         this._slider = new Slider.Slider(this._sliderValue);
         this._slider.connect('value-changed', Lang.bind(this, this._onSliderValueChanged));
         this._slider.connect('drag-begin', Lang.bind(this, this._onSliderDragBegan));
         this._slider.connect('drag-end', Lang.bind(this, this._onSliderDragEnded));
-        this._slider.actor.x_expand = true;
-        this._menuItem.actor.add_actor(this._slider.actor);
+        this._slider.x_expand = true;
+        this._menuItem.add_actor(this._slider);
 
         this._sliderIsDragging = false;
 
