@@ -56,9 +56,6 @@ const TextScalerButton = new Lang.Class({
         // The actual text scaling factor, as a float.
         this._currentValue = this._get_text_scaling_factor();
 
-        // The value currently displayed by the slider, normalized to [0.00, 1.00].
-        this._sliderValue = _textScalingToSliderValue(this._currentValue);
-
         // Panel menu icon.
         this._hbox = new St.BoxLayout({ style_class: 'panel-status-menu-box' });
         this._hbox.add_actor(new St.Icon({ style_class: 'system-status-icon',
@@ -79,8 +76,11 @@ const TextScalerButton = new Lang.Class({
         this._entry.clutter_text.connect('key-focus-out', Lang.bind(this, this._onEntryKeyFocusOut));
         this._menuItem.add_actor(this._entry);
 
+        // The value currently displayed by the slider, normalized to [0.00, 1.00].
+        this._sliderValue = _textScalingToSliderValue(this._currentValue);
+
         this._slider = new Slider.Slider(this._sliderValue);
-        this._slider.connect('value-changed', Lang.bind(this, this._onSliderValueChanged));
+        this._slider.connect('notify::value', Lang.bind(this, this._onSliderValueChanged));
         this._slider.connect('drag-begin', Lang.bind(this, this._onSliderDragBegan));
         this._slider.connect('drag-end', Lang.bind(this, this._onSliderDragEnded));
         this._slider.x_expand = true;
@@ -115,9 +115,9 @@ const TextScalerButton = new Lang.Class({
         this._updateValueFromTextEntry(entry);
     },
 
-    _onSliderValueChanged: function(slider, value) {
-        this._sliderValue = value;
-        this._updateEntry(_sliderValueToTextScaling(value));
+    _onSliderValueChanged: function(slider) {
+        this._sliderValue = this._slider.value;
+        this._updateEntry(_sliderValueToTextScaling(this._sliderValue));
 
         // We don't want to update the value when the user is explicitly
         // dragging the slider by clicking on the handle and moving it
@@ -200,7 +200,7 @@ const TextScalerButton = new Lang.Class({
     },
 
     _updateSlider: function() {
-        this._slider.setValue(_textScalingToSliderValue(this._currentValue));
+        this._slider.value = _textScalingToSliderValue(this._currentValue);
     },
 
     _updateResetValueItem: function() {
