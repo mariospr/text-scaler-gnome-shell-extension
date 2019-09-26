@@ -54,7 +54,7 @@ const TextScalerButton = new Lang.Class({
         this._settings.connect('changed::text-scaling-factor', Lang.bind(this, this._onSettingsChanged));
 
         // The actual text scaling factor, as a float.
-        this._currentValue = this._settings.get_double(TEXT_SCALING_FACTOR_KEY);
+        this._currentValue = this._get_text_scaling_factor();
 
         // The value currently displayed by the slider, normalized to [0.00, 1.00].
         this._sliderValue = _textScalingToSliderValue(this._currentValue);
@@ -100,7 +100,7 @@ const TextScalerButton = new Lang.Class({
     },
 
     _onSettingsChanged: function(settings, key) {
-        this._updateValue(this._settings.get_double(TEXT_SCALING_FACTOR_KEY), false);
+        this._updateValue(this._get_text_scaling_factor(), false);
     },
 
     _onMenuItemKeyPressed: function(actor, event) {
@@ -156,6 +156,14 @@ const TextScalerButton = new Lang.Class({
         // Force to always update the UI to make sure that whatever
         // value gets actually applied is displayed as it should be.
         this._updateUI();
+    },
+
+    // Reads the text scaling factor from GSettings and returns a valid double.
+    _get_text_scaling_factor: function() {
+        let gsettings_value = this._settings.get_double(TEXT_SCALING_FACTOR_KEY);
+        if (isNaN(gsettings_value))
+            return DEFAULT_VALUE;
+        return gsettings_value;
     },
 
     _updateSettings: function() {
