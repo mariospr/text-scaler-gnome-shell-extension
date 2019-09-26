@@ -45,13 +45,13 @@ const TextScalerButton = new Lang.Class({
     Name: 'TextScalerButton',
     Extends: PanelMenu.Button,
 
-    _init: function() {
+    _init() {
         this.parent(0.0, "Text Scaler Button");
         this.setSensitive(true);
 
         // GSettings to change the text-scaling factor.
         this._settings = new Gio.Settings({ schema_id: 'org.gnome.desktop.interface' });
-        this._settings.connect('changed::text-scaling-factor', Lang.bind(this, this._onSettingsChanged));
+        this._settings.connect('changed::text-scaling-factor', (settings, key) => this._onSettingsChanged(settings, key));
 
         // The actual text scaling factor, as a float.
         this._currentValue = this._get_text_scaling_factor();
@@ -68,21 +68,21 @@ const TextScalerButton = new Lang.Class({
         this.setMenu(this._menu);
 
         this._menuItem = new PopupMenu.PopupBaseMenuItem({ activate: true });
-        this._menuItem.connect('key-press-event', Lang.bind(this, this._onMenuItemKeyPressed));
+        this._menuItem.connect('key-press-event', (actor, event) => this._onMenuItemKeyPressed(actor, event));
         this._menu.addMenuItem(this._menuItem);
 
         this._entry = new St.Entry();
-        this._entry.clutter_text.connect('activate', Lang.bind(this, this._onEntryActivated));
-        this._entry.clutter_text.connect('key-focus-out', Lang.bind(this, this._onEntryKeyFocusOut));
+        this._entry.clutter_text.connect('activate', (entry) => this._onEntryActivated(entry));
+        this._entry.clutter_text.connect('key-focus-out', (entry) => this._onEntryKeyFocusOut(entry));
         this._menuItem.add_actor(this._entry);
 
         // The value currently displayed by the slider, normalized to [0.00, 1.00].
         this._sliderValue = _textScalingToSliderValue(this._currentValue);
 
         this._slider = new Slider.Slider(this._sliderValue);
-        this._slider.connect('notify::value', Lang.bind(this, this._onSliderValueChanged));
-        this._slider.connect('drag-begin', Lang.bind(this, this._onSliderDragBegan));
-        this._slider.connect('drag-end', Lang.bind(this, this._onSliderDragEnded));
+        this._slider.connect('notify::value', (slider) => this._onSliderValueChanged(slider));
+        this._slider.connect('drag-begin', (slider) => this._onSliderDragBegan(slider));
+        this._slider.connect('drag-end', (slider) => this._onSliderDragEnded(slider));
         this._slider.x_expand = true;
         this._menuItem.add_actor(this._slider);
 
@@ -92,30 +92,30 @@ const TextScalerButton = new Lang.Class({
         this._menu.addMenuItem(this._separatorItem);
 
         this._resetValueItem = new PopupMenu.PopupMenuItem(_("Reset to default value"));
-        this._resetValueItem.connect('activate', Lang.bind(this, this._onResetValueActivate));
+        this._resetValueItem.connect('activate', (menuItem, event) => this._onResetValueActivate());
         this._menu.addMenuItem(this._resetValueItem);
 
         // Make sure we first update the UI with the current state.
         this._updateUI();
     },
 
-    _onSettingsChanged: function(settings, key) {
+    _onSettingsChanged(settings, key) {
         this._updateValue(this._get_text_scaling_factor(), false);
     },
 
-    _onMenuItemKeyPressed: function(actor, event) {
+    _onMenuItemKeyPressed(actor, event) {
         return this._slider.onKeyPressEvent(actor, event);
     },
 
-    _onEntryActivated: function(entry) {
+    _onEntryActivated(entry) {
         this._updateValueFromTextEntry(entry);
     },
 
-    _onEntryKeyFocusOut: function(entry) {
+    _onEntryKeyFocusOut(entry) {
         this._updateValueFromTextEntry(entry);
     },
 
-    _onSliderValueChanged: function(slider) {
+    _onSliderValueChanged(slider) {
         this._sliderValue = this._slider.value;
         this._updateEntry(_sliderValueToTextScaling(this._sliderValue));
 
@@ -128,22 +128,22 @@ const TextScalerButton = new Lang.Class({
             this._updateValue(_sliderValueToTextScaling(this._sliderValue));
     },
 
-    _onSliderDragBegan: function(slider) {
+    _onSliderDragBegan(slider) {
         this._sliderIsDragging = true;
     },
 
-    _onSliderDragEnded: function(slider) {
+    _onSliderDragEnded(slider) {
         // We don't update the scaling factor on 'value-changed'
         // when explicitly dragging, so we need to do it here too.
         this._updateValue(_sliderValueToTextScaling(this._sliderValue));
         this._sliderIsDragging = false;
     },
 
-    _onResetValueActivate: function(menuItem, event) {
+    _onResetValueActivate(menuItem, event) {
         this._updateValue(DEFAULT_VALUE);
     },
 
-    _updateValueFromTextEntry: function(entry) {
+    _updateValueFromTextEntry(entry) {
         let currentText = entry.get_text();
         let value = parseFloat(currentText);
 
@@ -159,18 +159,18 @@ const TextScalerButton = new Lang.Class({
     },
 
     // Reads the text scaling factor from GSettings and returns a valid double.
-    _get_text_scaling_factor: function() {
+    _get_text_scaling_factor() {
         let gsettings_value = this._settings.get_double(TEXT_SCALING_FACTOR_KEY);
         if (isNaN(gsettings_value))
             return DEFAULT_VALUE;
         return gsettings_value;
     },
 
-    _updateSettings: function() {
+    _updateSettings() {
         this._settings.set_double(TEXT_SCALING_FACTOR_KEY, this._currentValue);
     },
 
-    _updateValue: function(value, updateSettings=false) {
+    _updateValue(value, updateSettings=false) {
         if (this._currentValue == value)
             return;
 
@@ -186,24 +186,24 @@ const TextScalerButton = new Lang.Class({
         this._updateUI();
     },
 
-    _updateUI: function() {
+    _updateUI() {
         this._updateEntry();
         this._updateSlider();
         this._updateResetValueItem();
     },
 
-    _updateEntry: function(value=null) {
+    _updateEntry(value=null) {
         let valueToDisplay = (value != null) ? value : this._currentValue;
 
         // We only show NUM_DECIMALS decimals on the text entry widget.
         this._entry.set_text(valueToDisplay.toFixed(NUM_DECIMALS));
     },
 
-    _updateSlider: function() {
+    _updateSlider() {
         this._slider.value = _textScalingToSliderValue(this._currentValue);
     },
 
-    _updateResetValueItem: function() {
+    _updateResetValueItem() {
         this._resetValueItem.setSensitive(!_isDefaultFloatValue(this._currentValue));
     }
 });
