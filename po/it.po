@@ -1,5 +1,4 @@
-
-# ITALIAN TRANSLATION.
+# ITALIAN TRANSLATION FOR TEXT-SCALER.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # ALBANO BATTISTELLA <albano_battistella@hotmail.com>, 2022.
@@ -9,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Text Scaler GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-18 22:11+0100\n"
-"PO-Revision-Date: 2022-02-20 14:00-0100\n"
+"PO-Revision-Date: 2022-08-14 14:00-0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <albano_battistella@hotmail.com>\n"
 "Language: it\n"
