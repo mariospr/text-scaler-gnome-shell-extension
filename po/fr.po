@@ -1,0 +1,24 @@
+
+# FRENCH TRANSLATION.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# ALBANO BATTISTELLA <albano_battistella@hotmail.com>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Text Scaler GNOME Shell Extension\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-05-18 22:11+0100\n"
+"PO-Revision-Date: 2022-08-23 13:00-0100\n"
+"Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
+"Language-Team: French <albano_battistella@hotmail.com>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+#: ../extension.js:94
+msgid "Reset to default value"
+msgstr "Restaurer par défaut"
