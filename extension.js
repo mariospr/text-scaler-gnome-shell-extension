@@ -2,6 +2,7 @@
 
 const Lang = imports.lang;
 const Gio = imports.gi.Gio;
+const GObject = imports.gi.GObject;
 const St = imports.gi.St;
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
@@ -41,10 +42,12 @@ function _isDefaultFloatValue(value) {
     return Math.abs(value - DEFAULT_VALUE) < (Math.pow(10, -NUM_DECIMALS) / 2);
 }
 
-const TextScalerButton = new Lang.Class({
-    Name: 'TextScalerButton',
+var TextScalerButton = GObject.registerClass({
+    GTypeName: 'TextScalerButton',
+}, class A extends GObject.Object {
+    constructor() {
+        super();
 
-    _init() {
         this.actor = new PanelMenu.Button(0.0, "Text Scaler Button");
         this.actor.setSensitive(true);
 
@@ -96,23 +99,23 @@ const TextScalerButton = new Lang.Class({
 
         // Make sure we first update the UI with the current state.
         this._updateUI();
-    },
+    }
 
     _onSettingsChanged(settings, key) {
         this._updateValue(this._get_text_scaling_factor(), false);
-    },
+    }
 
     _onMenuItemKeyPressed(actor, event) {
         return this._slider.onKeyPressEvent(actor, event);
-    },
+    }
 
     _onEntryActivated(entry) {
         this._updateValueFromTextEntry(entry);
-    },
+    }
 
     _onEntryKeyFocusOut(entry) {
         this._updateValueFromTextEntry(entry);
-    },
+    }
 
     _onSliderValueChanged(slider) {
         this._sliderValue = this._slider.value;
@@ -125,22 +128,22 @@ const TextScalerButton = new Lang.Class({
         // area of the screen right after updating the scaling factor.
         if (!this._sliderIsDragging)
             this._updateValue(_sliderValueToTextScaling(this._sliderValue));
-    },
+    }
 
     _onSliderDragBegan(slider) {
         this._sliderIsDragging = true;
-    },
+    }
 
     _onSliderDragEnded(slider) {
         // We don't update the scaling factor on 'value-changed'
         // when explicitly dragging, so we need to do it here too.
         this._updateValue(_sliderValueToTextScaling(this._sliderValue));
         this._sliderIsDragging = false;
-    },
+    }
 
     _onResetValueActivate(menuItem, event) {
         this._updateValue(DEFAULT_VALUE);
-    },
+    }
 
     _updateValueFromTextEntry(entry) {
         let currentText = entry.get_text();
@@ -155,7 +158,7 @@ const TextScalerButton = new Lang.Class({
         // Force to always update the UI to make sure that whatever
         // value gets actually applied is displayed as it should be.
         this._updateUI();
-    },
+    }
 
     // Reads the text scaling factor from GSettings and returns a valid double.
     _get_text_scaling_factor() {
@@ -163,11 +166,11 @@ const TextScalerButton = new Lang.Class({
         if (isNaN(gsettings_value))
             return DEFAULT_VALUE;
         return gsettings_value;
-    },
+    }
 
     _updateSettings() {
         this._settings.set_double(TEXT_SCALING_FACTOR_KEY, this._currentValue);
-    },
+    }
 
     _updateValue(value, updateSettings=false) {
         if (this._currentValue == value)
@@ -183,29 +186,30 @@ const TextScalerButton = new Lang.Class({
 
         // Always affect the UI to reflect changes.
         this._updateUI();
-    },
+    }
 
     _updateUI() {
         this._updateEntry();
         this._updateSlider();
         this._updateResetValueItem();
-    },
+    }
 
     _updateEntry(value=null) {
         let valueToDisplay = (value != null) ? value : this._currentValue;
 
         // We only show NUM_DECIMALS decimals on the text entry widget.
         this._entry.set_text(valueToDisplay.toFixed(NUM_DECIMALS));
-    },
+    }
 
     _updateSlider() {
         this._slider.value = _textScalingToSliderValue(this._currentValue);
-    },
+    }
 
     _updateResetValueItem() {
         this._resetValueItem.setSensitive(!_isDefaultFloatValue(this._currentValue));
     }
-});
+}
+);
 
 let _button = null;
 
