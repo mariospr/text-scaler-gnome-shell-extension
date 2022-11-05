@@ -224,4 +224,5 @@ function enable() {
 
 function disable() {
     _button.destroy();
+    _button = null;
 }
