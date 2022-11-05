@@ -9,8 +9,8 @@ const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 const Slider = imports.ui.slider;
 
-const Me = imports.misc.extensionUtils.getCurrentExtension();
-const Convenience = Me.imports.convenience;
+const ExtensionUtils = imports.misc.extensionUtils;
+const Me = ExtensionUtils.getCurrentExtension();
 const Gettext = imports.gettext.domain('text-scaler');
 const _ = Gettext.gettext;
 
@@ -214,7 +214,7 @@ var TextScalerButton = GObject.registerClass({
 let _button = null;
 
 function init() {
-    Convenience.initTranslations("text-scaler");
+    ExtensionUtils.initTranslations("text-scaler");
 }
 
 function enable() {
