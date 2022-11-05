@@ -43,11 +43,10 @@ function _isDefaultFloatValue(value) {
 
 const TextScalerButton = new Lang.Class({
     Name: 'TextScalerButton',
-    Extends: PanelMenu.Button,
 
     _init() {
-        this.parent(0.0, "Text Scaler Button");
-        this.setSensitive(true);
+        this.actor = new PanelMenu.Button(0.0, "Text Scaler Button");
+        this.actor.setSensitive(true);
 
         // GSettings to change the text-scaling factor.
         this._settings = new Gio.Settings({ schema_id: 'org.gnome.desktop.interface' });
@@ -61,11 +60,11 @@ const TextScalerButton = new Lang.Class({
         this._hbox.add_actor(new St.Icon({ style_class: 'system-status-icon',
                                            icon_name: 'preferences-desktop-font' }));
         this._hbox.add_actor(PopupMenu.arrowIcon(St.Side.BOTTOM));
-        this.add_actor(this._hbox);
+        this.actor.add_actor(this._hbox);
 
         // Popup Menu.
-        this._menu = new PopupMenu.PopupMenu(this, 0.0, St.Side.BOTTOM);
-        this.setMenu(this._menu);
+        this._menu = this.actor.menu;
+        Main.panel.menuManager.addMenu(this._menu);
 
         this._menuItem = new PopupMenu.PopupBaseMenuItem({ activate: true });
         this._menuItem.connect('key-press-event', (actor, event) => this._onMenuItemKeyPressed(actor, event));
@@ -216,7 +215,7 @@ function init() {
 
 function enable() {
     _button = new TextScalerButton();
-    Main.panel.addToStatusArea('text-scaler-button', _button);
+    Main.panel.addToStatusArea('text-scaler-button', _button.actor);
 }
 
 function disable() {
