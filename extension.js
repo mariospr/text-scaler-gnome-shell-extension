@@ -223,6 +223,6 @@ function enable() {
 }
 
 function disable() {
-    _button.destroy();
+    _button.actor.destroy();
     _button = null;
 }
