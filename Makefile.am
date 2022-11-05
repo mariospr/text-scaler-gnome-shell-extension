@@ -9,7 +9,7 @@ EXT_UUID = $(EXT_ID)@gnome-shell-extensions.mariospr.org
 topextensiondir = $(datadir)/gnome-shell/extensions
 extensiondir = $(topextensiondir)/$(EXT_UUID)
 
-dist_extension_DATA = extension.js convenience.js
+dist_extension_DATA = extension.js
 nodist_extension_DATA = metadata.json
 
 metadata.json: metadata.json.in Makefile
