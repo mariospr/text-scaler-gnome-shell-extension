@@ -1,5 +1,5 @@
 AC_PREREQ(2.63)
-AC_INIT([text-scaler],[12],[https://github.com/mariospr/text-scaler-gnome-shell-extension])
+AC_INIT([text-scaler],[13],[https://github.com/mariospr/text-scaler-gnome-shell-extension])
 
 AC_CONFIG_MACRO_DIR([m4])
 
