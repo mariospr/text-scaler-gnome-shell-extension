@@ -28,12 +28,12 @@ Clone the repository:
 
 And type the following to install it under /usr (or any other prefix):
 
-    $ autogen --prefix=/usr
+    $ ./autogen.sh --prefix=/usr
     $ make install
 
 If all you want is install it under your `$HOME` directory, you can simply do this:
 
-    $ autogen
+    $ ./autogen.sh
     $ make local-install
 
 Once installed, the extension can be enabled using the `gnome-shell-extension-prefs`
