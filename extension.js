@@ -59,11 +59,8 @@ var TextScalerButton = GObject.registerClass({
         this._currentValue = this._get_text_scaling_factor();
 
         // Panel menu icon.
-        this._hbox = new St.BoxLayout({ style_class: 'panel-status-menu-box' });
-        this._hbox.add_actor(new St.Icon({ style_class: 'system-status-icon',
+        this.actor.add_actor(new St.Icon({ style_class: 'system-status-icon',
                                            icon_name: 'preferences-desktop-font' }));
-        this._hbox.add_actor(PopupMenu.arrowIcon(St.Side.BOTTOM));
-        this.actor.add_actor(this._hbox);
 
         // Popup Menu.
         this._menu = this.actor.menu;
