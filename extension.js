@@ -1,18 +1,15 @@
 // -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 
-const Lang = imports.lang;
-const Gio = imports.gi.Gio;
-const GObject = imports.gi.GObject;
-const St = imports.gi.St;
-const Main = imports.ui.main;
-const PanelMenu = imports.ui.panelMenu;
-const PopupMenu = imports.ui.popupMenu;
-const Slider = imports.ui.slider;
+import Gio from 'gi://Gio';
+import GObject from 'gi://GObject';
+import St from 'gi://St';
 
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-const Gettext = imports.gettext.domain('text-scaler');
-const _ = Gettext.gettext;
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
+import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
+import * as Slider from 'resource:///org/gnome/shell/ui/slider.js';
+
+import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 const DEFAULT_VALUE = 1.00;
 const MIN_VALUE = 0.50;
@@ -208,18 +205,17 @@ var TextScalerButton = GObject.registerClass({
 }
 );
 
-let _button = null;
+export default class LGButtonExtension extends Extension {
+    enable() {
+        this._button = new TextScalerButton();
+        Main.panel.addToStatusArea('text-scaler-button', this._button.actor);
+    }
 
-function init() {
-    ExtensionUtils.initTranslations("text-scaler");
+    disable() {
+        if (this._button !== null) {
+            this._button.actor.destroy();
+            this._button = null;
+        }
+    }
 }
 
-function enable() {
-    _button = new TextScalerButton();
-    Main.panel.addToStatusArea('text-scaler-button', _button.actor);
-}
-
-function disable() {
-    _button.actor.destroy();
-    _button = null;
-}
