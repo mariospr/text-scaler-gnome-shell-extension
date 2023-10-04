@@ -39,7 +39,7 @@ function _isDefaultFloatValue(value) {
     return Math.abs(value - DEFAULT_VALUE) < (Math.pow(10, -NUM_DECIMALS) / 2);
 }
 
-var TextScalerButton = GObject.registerClass({
+const TextScalerButton = GObject.registerClass({
     GTypeName: 'TextScalerButton',
 }, class A extends GObject.Object {
     constructor() {
@@ -88,14 +88,14 @@ var TextScalerButton = GObject.registerClass({
         this._menu.addMenuItem(this._separatorItem);
 
         this._resetValueItem = new PopupMenu.PopupMenuItem(_("Reset to default value"));
-        this._resetValueItem.connect('activate', (menuItem, event) => this._onResetValueActivate());
+        this._resetValueItem.connect('activate', () => this._onResetValueActivate());
         this._menu.addMenuItem(this._resetValueItem);
 
         // Make sure we first update the UI with the current state.
         this._updateUI();
     }
 
-    _onSettingsChanged(settings, key) {
+    _onSettingsChanged() {
         this._updateValue(this._get_text_scaling_factor(), false);
     }
 
@@ -111,7 +111,7 @@ var TextScalerButton = GObject.registerClass({
         this._updateValueFromTextEntry(entry);
     }
 
-    _onSliderValueChanged(slider) {
+    _onSliderValueChanged() {
         this._sliderValue = this._slider.value;
         this._updateEntry(_sliderValueToTextScaling(this._sliderValue));
 
@@ -124,18 +124,18 @@ var TextScalerButton = GObject.registerClass({
             this._updateValue(_sliderValueToTextScaling(this._sliderValue));
     }
 
-    _onSliderDragBegan(slider) {
+    _onSliderDragBegan() {
         this._sliderIsDragging = true;
     }
 
-    _onSliderDragEnded(slider) {
+    _onSliderDragEnded() {
         // We don't update the scaling factor on 'value-changed'
         // when explicitly dragging, so we need to do it here too.
         this._updateValue(_sliderValueToTextScaling(this._sliderValue));
         this._sliderIsDragging = false;
     }
 
-    _onResetValueActivate(menuItem, event) {
+    _onResetValueActivate() {
         this._updateValue(DEFAULT_VALUE);
     }
 
@@ -167,7 +167,7 @@ var TextScalerButton = GObject.registerClass({
     }
 
     _updateValue(value, updateSettings=false) {
-        if (this._currentValue == value)
+        if (this._currentValue === value)
             return;
 
         // Need to keep the value between the valid limits.
@@ -189,7 +189,7 @@ var TextScalerButton = GObject.registerClass({
     }
 
     _updateEntry(value=null) {
-        let valueToDisplay = (value != null) ? value : this._currentValue;
+        let valueToDisplay = (value !== null) ? value : this._currentValue;
 
         // We only show NUM_DECIMALS decimals on the text entry widget.
         this._entry.set_text(valueToDisplay.toFixed(NUM_DECIMALS));
