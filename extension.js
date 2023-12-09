@@ -205,7 +205,7 @@ const TextScalerButton = GObject.registerClass({
 }
 );
 
-export default class LGButtonExtension extends Extension {
+export default class TextScalerExtension extends Extension {
     enable() {
         this._button = new TextScalerButton();
         Main.panel.addToStatusArea('text-scaler-button', this._button.actor);
