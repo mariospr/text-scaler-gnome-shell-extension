@@ -56,7 +56,7 @@ const TextScalerButton = GObject.registerClass({
         this._currentValue = this._get_text_scaling_factor();
 
         // Panel menu icon.
-        this.actor.add_actor(new St.Icon({ style_class: 'system-status-icon',
+        this.actor.add_child(new St.Icon({ style_class: 'system-status-icon',
                                            icon_name: 'preferences-desktop-font' }));
 
         // Popup Menu.
@@ -70,7 +70,7 @@ const TextScalerButton = GObject.registerClass({
         this._entry = new St.Entry();
         this._entry.clutter_text.connect('activate', (entry) => this._onEntryActivated(entry));
         this._entry.clutter_text.connect('key-focus-out', (entry) => this._onEntryKeyFocusOut(entry));
-        this._menuItem.add_actor(this._entry);
+        this._menuItem.add_child(this._entry);
 
         // The value currently displayed by the slider, normalized to [0.00, 1.00].
         this._sliderValue = _textScalingToSliderValue(this._currentValue);
@@ -80,7 +80,7 @@ const TextScalerButton = GObject.registerClass({
         this._slider.connect('drag-begin', (slider) => this._onSliderDragBegan(slider));
         this._slider.connect('drag-end', (slider) => this._onSliderDragEnded(slider));
         this._slider.x_expand = true;
-        this._menuItem.add_actor(this._slider);
+        this._menuItem.add_child(this._slider);
 
         this._sliderIsDragging = false;
 
